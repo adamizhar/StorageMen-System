@@ -18,6 +18,7 @@
                 @foreach($logs as $log)
                 <tr class="hover:bg-gray-100">
                     <td class="px-4 py-2 border">{{ $log->created_at->format('Y-m-d H:i') }}</td>
+                    <td>{{ dd($log->user) }}</td>
                     <td class="px-4 py-2 border">
                         {{ $log->user ? $log->user->name : 'Unknown' }} 
                         ({{ $log->user ? $log->user->email : 'deleted user' }})
