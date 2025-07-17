@@ -6,11 +6,12 @@ use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TransactionController extends Controller
 {
     public function index(Request $request)
-{
+    {
     $query = Transaction::with('product', 'user');
 
     //Filter by current user (if not admin)
@@ -23,7 +24,7 @@ class TransactionController extends Controller
     $query->whereHas('product', function ($q) use ($request) {
         $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($request->product) . '%']);
     });
-}
+    }
 
 
     if ($request->filled('type')) {
@@ -42,7 +43,15 @@ class TransactionController extends Controller
     $products = Product::all(); // optional: for dropdown
 
     return view('transactions.index', compact('transactions', 'products'));
-}
+    }
+
+    public function downloadPdf()
+    {
+        $transactions = Transaction::all();
+        $pdf = Pdf::loadView('transactions.pdf', compact('transactions'));
+        return $pdf->download('transactions_report.pdf');
+    }
+
 
     public function create()
     {

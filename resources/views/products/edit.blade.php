@@ -49,10 +49,12 @@
 
         <div class="pt-4 flex gap-3">
             <button type="submit"
+                style="background-color: #16a34a; color: white;"
                 class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">
                 Update
             </button>
             <a href="{{ route('products.index') }}"
+               style="background-color: #f80828ff; color: white;"
                class="bg-gray-300 text-gray-500 px-4 py-2 rounded hover:bg-gray-400 transition">
                 Cancel
             </a>

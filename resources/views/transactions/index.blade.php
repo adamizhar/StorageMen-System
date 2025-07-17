@@ -30,14 +30,11 @@
         
     </form>
 
-<!-- View History Button -->
-        <div class="flex justify-end mb-4">
-            <a href="{{ route('transactions.index') }}" 
-            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-            View History
-            </a>
-        </div>
-    
+    <!-- PDF -->
+    <a href="{{ route('transactions.downloadPdf') }}"
+    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded">
+    Download PDF
+    </a></br>
         
     <!-- Table -->
     <div class="overflow-x-auto bg-white rounded shadow">
