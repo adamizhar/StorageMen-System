@@ -44,12 +44,19 @@
                             @endif
                         </td>
                         <td class="py-2 px-4 border">
-                            <a href="{{ route('products.edit', $product->id) }}" class="text-blue-600 hover:underline mr-2">Edit</a>
-                            <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" onclick="return confirm('Are you sure?')" class="text-red-600 hover:underline">Delete</button>
-                            </form>
+                            @php
+                                $role = Auth::user()->role;
+                            @endphp
+
+                            @if(in_array($role, ['admin', 'manager', 'supervisor']))
+                                <a href="{{ route('products.edit', $product->id) }}" class="text-blue-600 hover:underline mr-2">Edit</a>
+
+                                <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" onclick="return confirm('Are you sure?')" class="text-red-600 hover:underline">Delete</button>
+                                </form>
+                            @endif
                         </td>
                     </tr>
                 @empty
