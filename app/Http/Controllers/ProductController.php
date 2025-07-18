@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Product;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request;    
 use App\Http\Requests\StoreProductRequest;
 use Illuminate\Support\Facades\Auth;// Helper auto-loaded: log_action() is available globally if autoloaded properly
 
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;// Helper auto-loaded: log_action() is avail
 
 class ProductController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      */
@@ -60,7 +62,11 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('products.edit', compact('product'));
+    if (!auth()->user()->hasAnyRole(['admin', 'manager', 'supervisor'])) {
+        abort(403, 'Unauthorized action.');
+    }
+
+    return view('products.edit', compact('product'));
     }
 
     /**
@@ -68,17 +74,24 @@ class ProductController extends Controller
      */
     //public function update(Request $request, Product $product)
     public function update(StoreProductRequest $request, Product $product)
-{
-    $data = $request->validated();
+    {
+        // Only allow admin, manager, or supervisor
+        if (!auth()->user()->hasAnyRole(['admin', 'manager', 'supervisor'])) {
+            abort(403, 'Unauthorized action.');
+        }
 
-    if ($request->hasFile('image')) {
-        $data['image_path'] = $request->file('image')->store('products', 'public');
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $data['image_path'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product->update($data);
+
+        log_action('Updated Product', 'ID: ' . $product->id . ', Name: ' . $product->name);
+
+        return redirect()->route('products.index')->with('success', 'Product updated!');
     }
-
-    $product->update($data);
-    log_action('Updated Product', 'ID: ' . $product->id . ', Name: ' . $product->name);
-    return redirect()->route('products.index')->with('success', 'Product updated!');
-}
 
 
     /**
